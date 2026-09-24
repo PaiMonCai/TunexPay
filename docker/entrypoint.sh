@@ -70,7 +70,13 @@ wait_http() {
   return 1
 }
 
-trap stop_children SIGTERM SIGINT EXIT
+on_signal() {
+  stop_children
+  exit 143
+}
+
+trap on_signal SIGTERM SIGINT
+trap stop_children EXIT
 
 run_migrations
 
