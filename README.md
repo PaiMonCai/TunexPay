@@ -57,6 +57,8 @@ TUOXIN Matrix / Studio / Chat / NewAPI
 
 要求 Docker Compose v2。
 
+当前版本采用 **TunexPay Appliance 单应用镜像**：Next.js 管理端/收银台、Hono API 与后台 Worker 在同一个应用容器中运行，由容器内统一网关分流。宿主机只暴露 `127.0.0.1:3000`，OpenResty/Nginx 只需要反代这一个端口。MySQL 与 Redis 仍作为独立基础设施，以便持久化、备份和升级。
+
 ```bash
 cp .env.example .env
 openssl rand -hex 32       # 写入 SECRETS_ENCRYPTION_KEY
@@ -72,9 +74,21 @@ docker compose up -d --build
 
 启动后：
 
+- 统一入口：`http://localhost:3000`
 - 管理后台：`http://localhost:3000`，使用 `.env` 中的 `ADMIN_PASSWORD` 登录
-- API 健康检查：`http://localhost:3001/health`
+- API 健康检查：`http://localhost:3000/health`
+- ePay：`/submit.php`、`/mapi.php`、`/api.php` 同样走 3000 统一入口
 - MySQL 与 Redis 默认不暴露到公网。
+
+应用容器启动时会先执行 Prisma migration。数据库暂时不可达时默认每 5 秒重试且不退出；可通过 `DB_MIGRATION_RETRY_SECONDS` 和 `DB_MIGRATION_MAX_ATTEMPTS` 调整。任何 Web/API/Worker 子进程异常退出时，整个 appliance 会退出并由 Docker 的 restart policy 重建，避免出现半可用状态。
+
+如果数据库安装在 Docker 宿主机，可将：
+
+```dotenv
+DATABASE_URL=mysql://tuoxin:密码@host.docker.internal:3306/tuoxin_pay
+```
+
+写入 `.env`。Compose 已加入 `host.docker.internal:host-gateway` 映射。宿主机 MySQL 必须监听 Docker 网桥可达的地址，同时应继续通过防火墙阻止公网访问 3306。
 
 首次可以在“应用”页面创建 `TUOXIN Matrix`。API Key、Webhook Secret、ePay Key 只显示一次，请立即保存。
 
@@ -145,7 +159,7 @@ ALLOW_PRIVATE_WEBHOOKS=true
 创建订单：
 
 ```bash
-curl -X POST http://localhost:3001/api/v1/orders \
+curl -X POST http://localhost:3000/api/v1/orders \
   -H 'Content-Type: application/json' \
   -H 'X-App-Id: app_xxx' \
   -H 'X-Api-Key: txp_app_xxx_xxx' \
@@ -156,7 +170,7 @@ curl -X POST http://localhost:3001/api/v1/orders \
 使用返回的 `orderNo` 发起支付：
 
 ```bash
-curl -X POST http://localhost:3001/api/v1/orders/ord_xxx/pay \
+curl -X POST http://localhost:3000/api/v1/orders/ord_xxx/pay \
   -H 'Content-Type: application/json' \
   -H 'X-App-Id: app_xxx' \
   -H 'X-Api-Key: txp_app_xxx_xxx' \
