@@ -2,7 +2,7 @@ name: tuoxin-pay
 
 x-backend-environment: &backend-environment
   NODE_ENV: production
-  DATABASE_URL: ${DATABASE_URL:-mysql://tuoxin:${MYSQL_PASSWORD:-tuoxin-change-me}@mysql:3306/tuoxin_pay}
+  DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
   REDIS_URL: ${REDIS_URL:-redis://redis:6379}
   API_PUBLIC_URL: ${API_PUBLIC_URL:-http://localhost:3000}
   WEB_PUBLIC_URL: ${WEB_PUBLIC_URL:-http://localhost:3000}
