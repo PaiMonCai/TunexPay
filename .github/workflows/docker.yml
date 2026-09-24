@@ -33,6 +33,7 @@ jobs:
           bash -n docker/entrypoint.sh
       - name: Validate Compose
         env:
+          DATABASE_URL: mysql://tuoxin:ci-password@mysql:3306/tuoxin_pay
           ADMIN_TOKEN: ci-admin-token-000000000000000000
           ADMIN_PASSWORD: ci-admin-password
           ADMIN_SESSION_SECRET: ci-admin-session-secret-000000000000000000
