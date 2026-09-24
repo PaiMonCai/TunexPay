@@ -3,6 +3,7 @@ name: Build and Push Image
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 env:
@@ -26,8 +27,20 @@ jobs:
       - run: npm run db:generate
       - run: npm run typecheck
       - run: npm test
+      - name: Validate appliance scripts
+        run: |
+          node --check docker/gateway.mjs
+          bash -n docker/entrypoint.sh
+      - name: Validate Compose
+        env:
+          ADMIN_TOKEN: ci-admin-token-000000000000000000
+          ADMIN_PASSWORD: ci-admin-password
+          ADMIN_SESSION_SECRET: ci-admin-session-secret-000000000000000000
+          SECRETS_ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000001
+        run: docker compose config -q
 
   docker:
+    if: github.event_name != 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     steps:
