@@ -164,6 +164,7 @@ export function Applications() {
       copy={`停用「${pendingDisable.name}」后，该应用不能再创建新订单；已经存在的订单、退款和通知投递仍会继续处理。`}
       confirmLabel="确认停用"
       danger
+      warning="停用会立即阻止该应用创建新订单；如果只是临时维护，请确认业务侧已做好相应处理。"
       working={busy === pendingDisable.id}
       onClose={() => setPendingDisable(null)}
       onConfirm={() => void setStatus(pendingDisable, "DISABLED").then(ok => { if (ok) setPendingDisable(null); })}
