@@ -107,18 +107,19 @@ export function Toast({ type = "ok", text, onClose }: { type?: "ok" | "error"; t
   </div>;
 }
 
-export function ConfirmModal({ title, copy, confirmLabel = "确认", danger = false, working = false, onConfirm, onClose }: {
+export function ConfirmModal({ title, copy, confirmLabel = "确认", danger = false, warning, working = false, onConfirm, onClose }: {
   title: string;
   copy: string;
   confirmLabel?: string;
   danger?: boolean;
+  warning?: string;
   working?: boolean;
   onConfirm: () => void;
   onClose: () => void;
 }) {
   return <Modal title={title} onClose={working ? () => undefined : onClose}>
     <p className="dialog-copy">{copy}</p>
-    {danger && <div className="dialog-warning">这是影响当前交易状态的操作，请确认你已经核对支付单信息。</div>}
+    {danger && <div className="dialog-warning">{warning || "这是影响当前交易状态的操作，请确认你已经核对支付单信息。"}</div>}
     <div className="dialog-actions">
       <button type="button" className={danger ? "button danger" : "button"} disabled={working} onClick={onConfirm}>{working ? "处理中…" : confirmLabel}</button>
       <button type="button" className="button secondary" disabled={working} onClick={onClose}>取消</button>
