@@ -87,7 +87,7 @@ export function Channels() {
       </div>
     </Modal>}
 
-    {editor && <Modal title={`配置通道 · ${editor.name}`} onClose={() => setEditor(null)}><ChannelEditor key={editor.id} plugin={editor.plugin} channel={editor} onClose={() => setEditor(null)} onSaved={async () => { setEditor(null); await channels.reload(); }} /></Modal>}
+    {editor && <Modal title={`配置通道 · ${editor.name}`} onClose={() => setEditor(null)}><ChannelEditor key={editor.id} plugin={editor.plugin} channel={editor} onClose={() => setEditor(null)} onSaved={async () => { setEditor(null); await channels.reload(); setNotice({ ok: true, text: "通道配置已保存，请重新检测后再分配给应用。" }); }} /></Modal>}
     {assignOpen && <Modal title="应用通道分配" onClose={() => setAssignOpen(false)}>
       <LoadingState loading={applications.loading} error={applications.error} empty={!applications.data?.length} emptyText="还没有业务应用，创建应用后即可在这里分配收款通道">
         <div className="table-wrap"><table><thead><tr><th>业务应用</th><th>收款通道</th></tr></thead><tbody>{applications.data?.map(app => {
