@@ -50,7 +50,7 @@ export function OwnerNotificationsPanel() {
   }
 
   async function test(channel: "EMAIL" | "FEISHU") {
-    setBusy(true);
+    setBusy(true); setNotice(null);
     try {
       await api("/owner-notifications/test", { method: "POST", body: JSON.stringify({ channel }) });
       setNotice({ type: "ok", text: "测试任务已排队，请查看下方投递状态（SUCCESS 才代表发送成功）。" });
