@@ -93,10 +93,12 @@ export function CopyValue({ value, label = "复制" }: { value: string; label?: 
 }
 
 export function Toast({ type = "ok", text, onClose }: { type?: "ok" | "error"; text: string; onClose: () => void }) {
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
   useEffect(() => {
-    const timer = window.setTimeout(onClose, 3200);
+    const timer = window.setTimeout(() => closeRef.current(), 3200);
     return () => window.clearTimeout(timer);
-  }, [onClose, text]);
+  }, [text]);
 
   return <div className={`toast toast-${type}`} role={type === "error" ? "alert" : "status"} aria-live="polite">
     <span className="toast-icon">{type === "error" ? <AlertCircle size={17} /> : <CheckCircle2 size={17} />}</span>
