@@ -36,7 +36,7 @@ export function Orders({ initialOrderNo }: { initialOrderNo?: string }) {
         <tbody>{rows.map(item => { const payment = item.payments[0]; return <tr key={item.id}>
           <td><button className="data-link row-open" onClick={() => setOpenOrderNo(item.orderNo)}><strong>{item.subject}</strong></button><div className="mono muted">{item.orderNo}</div>{item.expirationError && <div className="row-error">过期关闭：{item.expirationError}</div>}</td>
           <td data-label="应用"><span>{item.application.name}</span><div className="mono muted">{item.externalOrderNo}</div></td>
-          <td data-label="金额"><strong>{money(item.amount)}</strong></td>
+          <td data-label="金额" className="amount-cell"><strong>{money(item.amount)}</strong></td>
           <td data-label="最新支付">{payment ? <><ChannelTag code={payment.channel} /><div className="mono muted">{payment.paymentNo}</div></> : "—"}</td>
           <td data-label="订单状态"><Status value={item.status} />{item.expirationAttempts > 0 && item.status !== "CLOSED" && <div className="recovery-note">过期处理 {item.expirationAttempts} 次</div>}</td><td data-label="时间">{time(item.paidAt || item.createdAt)}<div className="muted">到期 {time(item.expiresAt)}</div></td>
         </tr>; })}</tbody>
