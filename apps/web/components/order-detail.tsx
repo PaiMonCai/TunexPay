@@ -127,7 +127,7 @@ export function OrderDetailBody({ orderNo }: { orderNo: string }) {
 }
 
 function Detail({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
-  return <div className="detail-row"><span>{label}</span><strong className={mono ? "mono break-all" : ""}>{value}</strong>{mono && value !== "—" && <CopyValue value={value} label={`复制${label}`} />}</div>;
+  return <div className="detail-row"><span>{label}</span><span className="detail-value-copy"><strong className={mono ? "mono break-all" : ""}>{value}</strong>{mono && value !== "—" && <CopyValue value={value} label={`复制${label}`} />}</span></div>;
 }
 
 function hasPayload(payload: unknown): boolean {
