@@ -185,10 +185,10 @@ export function Status({ value }: { value: string }) {
   return <span className={`badge badge-${tone}`} title={value}>{statusText(value)}</span>;
 }
 
-export function LoadingState({ loading, error, empty, children }: { loading: boolean; error: string; empty?: boolean; children: React.ReactNode }) {
+export function LoadingState({ loading, error, empty, emptyText = "暂无数据", children }: { loading: boolean; error: string; empty?: boolean; emptyText?: string; children: React.ReactNode }) {
   if (loading) return <div className="card skeleton-card" role="status" aria-label="正在加载"><div className="skeleton skeleton-title" /><div className="skeleton skeleton-line" /><div className="skeleton skeleton-line short" /></div>;
   if (error) return <div className="card error" role="alert">{error}</div>;
-  if (empty) return <div className="card empty">暂无数据</div>;
+  if (empty) return <div className="card empty">{emptyText}</div>;
   return <>{children}</>;
 }
 
